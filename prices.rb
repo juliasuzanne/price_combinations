@@ -18,36 +18,25 @@ prices.delete_at(0)
 
 # new array that saves all prices as floats
 prices_only = []
-
 prices.each do |item|
   prices_only << item[1].to_f
 end
 
-# verify loop did what expected
-# p prices_only
-
-# combination = prices_only.combination(2).to_a
-# combination = prices_only.combination(prices_only.length).to_a
-
-# p combination
-
+# new array that saves all possible combinations of prices from previous prices only array
 combinations = []
 i = 0
-
 while i < prices_only.length
   combinations << prices_only.combination(prices_only.length - i).to_a
   i += 1
 end
 
+# reduce nesting of arrays into one array with all possible combinations regardless of number of prices combined
 combinations = combinations.flatten(1)
 
-# p "COMBINATIONS"
-# pp combinations
+# save sum of each possible combination
 sum = 0
 i = 0
-
 combination_sums = []
-
 while i < combinations.length
   combinations[i].each do |number|
     sum = sum + number
@@ -57,23 +46,9 @@ while i < combinations.length
   i += 1
 end
 
-# p "SUMS"
-# pp combination_sums
-
-# go through each array within array and turn them into sums
-# while i < combinations.length
-#   while j < combinations[i].length
-#     combinations[i][j].each do |number|
-
-#     j += 1
-#     sum = 0
-#   end
-#   i += 1
-# end
-
+# save index of sums that match the target sum to a new array, so we can cross reference with the saved values that added up to match the target price
 sums_index = []
 index = 0
-
 while index < combination_sums.length
   if combination_sums[index] == target_price
     sums_index << index
@@ -81,27 +56,19 @@ while index < combination_sums.length
   index += 1
 end
 
-# pp sums_index
-
+# use the sums_index array to access and then save the working combinations only
 working_combinations = []
 sums_index.each do |index|
   working_combinations << combinations[index]
 end
 
-# pp working_combinations
-
+#convert prices to a hash with float values as prices
 prices = prices.to_h
 prices = Hash[prices.map { |k, v| [k, v.to_f] }]
 
-# pp prices
-
-#p prices.key("2.75")
-
-new_array = []
+# convert each item in the working combination array to the name of the dish rather than the price using the key method
 i = 0
 j = 0
-
-# pp working_combinations
 while i < working_combinations.length
   while j < working_combinations[i].length
     working_combinations[i][j] = prices.key(working_combinations[i][j])
@@ -110,9 +77,8 @@ while i < working_combinations.length
   j = 0
   i += 1
 end
-# p "WORKING COMBOS"
-# p working_combinations
 
+# check if there were any solutions, if not print There are no possible solutions, if there are interpolate every possible solution. Need to figure out how to add an "OR" in case there are multiple dishes with the same price.
 if working_combinations.length == 0
   p "There are no possible solutions"
 else
