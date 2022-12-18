@@ -1,3 +1,5 @@
+# NEED TO UPDATE SO THAT IF TWO ITEMS HAVE THE SAME PRICE IT WILL READ "OR"
+
 require "csv"
 
 prices = CSV.read("prices.csv")
